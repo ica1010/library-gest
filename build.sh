@@ -6,7 +6,7 @@ set -o errexit
 pip install -r requirements/local.txt
 
 # Convert static asset files
-python manage.py collectstatic --no-input
+python manage.py collectstatic --no-input  --settings=config.settings.local
 
 # Apply any outstanding database migrations
-python manage.py migrate
+python manage.py migrate  --settings=config.settings.local
