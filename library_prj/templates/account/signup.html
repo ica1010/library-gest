@@ -10,28 +10,10 @@
             <div class="card shadow">
                 <div class="card-body p-4">
                     <h2 class="mb-4 text-center">Créer un compte</h2>
-                    {% if error_message %}
-                        <div class="alert alert-danger">{{ error_message }}</div>
-                    {% endif %}
-                    <form method="post" action="">
+                    <form method="post" action="{% url 'account_signup' %}">
                         {% csrf_token %}
-                        <div class="mb-3">
-                            <label for="username" class="form-label">Nom d'utilisateur</label>
-                            <input type="text" class="form-control" id="username" name="username" value="{{ username|default:'' }}" required />
-                        </div>
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" name="email" value="{{ email|default:'' }}" required />
-                        </div>
-                        <div class="mb-3">
-                            <label for="password1" class="form-label">Mot de passe</label>
-                            <input type="password" class="form-control" id="password1" name="password1" required />
-                        </div>
-                        <div class="mb-3">
-                            <label for="password2" class="form-label">Confirmer le mot de passe</label>
-                            <input type="password" class="form-control" id="password2" name="password2" required />
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100">S'inscrire</button>
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-primary w-100 mt-3">S'inscrire</button>
                     </form>
                     <div class="mt-3 text-center">
                         <span>Déjà inscrit ? <a href="{% url 'account_login' %}">Se connecter</a></span>

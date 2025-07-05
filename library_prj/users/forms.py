@@ -4,7 +4,7 @@ from django.contrib.auth import forms as admin_forms
 from django.utils.translation import gettext_lazy as _
 
 from .models import User
-
+from django.forms.widgets import CheckboxInput
 
 class UserAdminChangeForm(admin_forms.UserChangeForm):
     class Meta(admin_forms.UserChangeForm.Meta):  # type: ignore[name-defined]
@@ -34,7 +34,7 @@ class UserSignupForm(SignupForm):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             if field.widget.input_type in ["text", "email", "password"]:
-                field.widget.attrs["class"] = field.widget.attrs.get("class", "") + " form-control"
+                field.widget.attrs["class"] = field.widget.attrs.get("class", "") + " form-control mb-3"
 
 
 class UserSocialSignupForm(SocialSignupForm):
@@ -45,9 +45,12 @@ class UserSocialSignupForm(SocialSignupForm):
     """
 
 
-class UserLoginForm(LoginForm):
+class CustomLoginForm(LoginForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
-            if field.widget.input_type in ["text", "email", "password"]:
-                field.widget.attrs["class"] = field.widget.attrs.get("class", "") + " form-control"
+            if not isinstance(field.widget, CheckboxInput):  # ✅ ignore les checkboxes
+                field.widget.attrs.update({
+                    'class': 'form-control mb-3',
+                    'placeholder': field.label,
+                })

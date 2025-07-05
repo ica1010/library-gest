@@ -291,7 +291,8 @@ ACCOUNT_EMAIL_REQUIRED = False  # Mettre à True si tu veux garder l'email oblig
 # https://docs.allauth.org/en/latest/account/configuration.html
 ACCOUNT_ADAPTER = "library_prj.users.adapters.AccountAdapter"
 # https://docs.allauth.org/en/latest/account/forms.html
-ACCOUNT_FORMS = {"signup": "library_prj.users.forms.UserSignupForm"}
+ACCOUNT_FORMS = {"signup": "library_prj.users.forms.UserSignupForm",
+                 "login": "library_prj.users.forms.CustomLoginForm",}
 # https://docs.allauth.org/en/latest/socialaccount/configuration.html
 SOCIALACCOUNT_ADAPTER = "library_prj.users.adapters.SocialAccountAdapter"
 # https://docs.allauth.org/en/latest/socialaccount/configuration.html

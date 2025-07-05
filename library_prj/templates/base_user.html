@@ -18,6 +18,24 @@
     <link rel="stylesheet" href="{% static 'assets/plugins/bootstrap/css/bootstrap.min.css' %}" />
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .errorlist {
+            color: #dc3545;
+            margin-bottom: 0.5rem;
+            list-style: none;
+            padding-left: 0;
+            font-size: 0.95em;
+        }
+        .errorlist li {
+            color: #dc3545;
+            margin-bottom: 0.2em;
+        }
+        form li {
+            color: #dc3545;
+            margin-bottom: 0.2em;
+        }
+        
+    </style>
     {% block head %}{% endblock head %}
 </head>
 <body>
