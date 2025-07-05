@@ -1,0 +1,41 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0" />
+    <title>{% block title %}Accueil Utilisateur{% endblock title %}</title>
+    <link rel="shortcut icon" href="{% static 'assets/img/favicon.png' %}" />
+    <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'assets/plugins/fontawesome/css/fontawesome.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'assets/plugins/fontawesome/css/all.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'assets/plugins/select2/css/select2.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'assets/plugins/aos/aos.css' %}" />
+    <link rel="stylesheet" href="{% static 'assets/css/feather.css' %}" />
+    <link rel="stylesheet" href="{% static 'assets/css/owl.carousel.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'assets/css/owl.theme.default.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'assets/plugins/bootstrap/css/bootstrap.min.css' %}" />
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    {% block head %}{% endblock head %}
+</head>
+<body>
+<div class="main-wrapper ">
+    {% include "includes/user/header.html" %}
+    <main class="container">
+        {% block content %}{% endblock content %}
+    </main>
+    {% include "includes/user/footer.html" %}
+</div>
+<script src="{% static 'assets/js/jquery-3.7.1.min.js' %}"></script>
+<script src="{% static 'assets/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'assets/plugins/select2/js/select2.min.js' %}"></script>
+<script src="{% static 'assets/plugins/aos/aos.js' %}"></script>
+<script src="{% static 'assets/js/backToTop.js' %}"></script>
+<script src="{% static 'assets/js/feather.min.js' %}"></script>
+<script src="{% static 'assets/js/owl.carousel.min.js' %}"></script>
+<script src="{% static 'assets/js/script.js' %}"></script>
+{% block scripts %}{% endblock scripts %}
+</body>
+</html> 

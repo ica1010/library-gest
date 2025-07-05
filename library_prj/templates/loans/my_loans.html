@@ -1,0 +1,59 @@
+{% extends "base_user.html" %}
+{% load static %}
+
+{% block title %}Mes emprunts | Ma Librairie{% endblock title %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-3">
+            {% include "includes/user/menu.html" %}
+        </div>
+        <div class="col-md-9">
+            <h2 class="mb-4">Mes emprunts</h2>
+            <div class="card mb-4">
+                <div class="card-body">
+                    {% if loans %}
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Livre</th>
+                                    <th>Date d'emprunt</th>
+                                    <th>Date de retour prévue</th>
+                                    <th>Date de retour effective</th>
+                                    <th>Statut</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for loan in loans %}
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'books:detail' loan.book.id %}">{{ loan.book.title }}</a>
+                                    </td>
+                                    <td>{{ loan.loan_date|date:'d/m/Y' }}</td>
+                                    <td>{{ loan.due_date|date:'d/m/Y' }}</td>
+                                    <td>{% if loan.return_date %}{{ loan.return_date|date:'d/m/Y' }}{% else %}-{% endif %}</td>
+                                    <td>
+                                        {% if loan.status == 'ongoing' %}
+                                            <span class="badge bg-primary">En cours</span>
+                                        {% elif loan.status == 'returned' %}
+                                            <span class="badge bg-success">Rendu</span>
+                                        {% elif loan.status == 'late' %}
+                                            <span class="badge bg-danger">En retard</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                        <div class="alert alert-info">Vous n'avez pas encore emprunté de livre.</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %} 

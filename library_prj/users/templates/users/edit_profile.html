@@ -1,0 +1,32 @@
+{% extends "base_user.html" %}
+{% load static %}
+{% block title %}Modifier mon profil | Ma Librairie{% endblock title %}
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-3">
+            {% include "includes/user/menu.html" %}
+        </div>
+        <div class="col-md-9">
+            <h2 class="mb-4">Modifier mon profil</h2>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Nom d'utilisateur</label>
+                            <input type="text" class="form-control" id="username" name="username" value="{{ user.username }}" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" required />
+                        </div>
+                        <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+                        <a href="{% url 'users:profile' %}" class="btn btn-outline-secondary ms-2">Annuler</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %} 

@@ -1,0 +1,39 @@
+<nav class="dashboard-sidebar bg-white shadow-sm rounded">
+    <ul class="nav flex-column dashborad-menus">
+        <li class="nav-item mb-2">
+            <a class="nav-link d-flex align-items-center gap-2 {% if request.resolver_match.url_name == 'dashboard' %}active fw-bold{% endif %}" href="{% url 'users:dashboard' %}">
+                <i class="fa fa-tachometer-alt"></i> <span>Dashboard</span>
+            </a>
+        </li>
+        <li class="nav-item mb-2">
+            <a class="nav-link d-flex align-items-center gap-2 {% if request.resolver_match.url_name == 'profile' %}active fw-bold{% endif %}" href="{% url 'users:profile' %}">
+                <i class="fa fa-user"></i> <span>Mon profil</span>
+            </a>
+        </li>
+        <li class="nav-item mb-2">
+            <a class="nav-link d-flex align-items-center gap-2" href="{% url 'loans:my_loans' %}">
+                <i class="fa fa-book"></i> <span>Mes emprunts</span>
+            </a>
+        </li>
+        <li class="nav-item mb-2">
+            <a class="nav-link d-flex align-items-center gap-2" href="{% url 'reservations:my_reservations' %}">
+                <i class="fa fa-bookmark"></i> <span>Mes réservations</span>
+            </a>
+        </li>
+        <li class="nav-item mb-2">
+            <a class="nav-link d-flex align-items-center gap-2" href="{% url 'sales:view_cart' %}">
+                <i class="fa fa-shopping-cart"></i> <span>Mon panier</span>
+            </a>
+        </li>
+        <li class="nav-item mb-2">
+            <a class="nav-link d-flex align-items-center gap-2 {% if request.resolver_match.url_name == 'order_history' %}active fw-bold{% endif %}" href="{% url 'sales:order_history' %}">
+                <i class="fa fa-receipt"></i> <span>Mes commandes</span>
+            </a>
+        </li>
+        <li class="nav-item mt-3">
+            <a class="nav-link d-flex align-items-center gap-2 text-danger" href="{% url 'account_logout' %}">
+                <i class="fa fa-sign-out-alt"></i> <span>Déconnexion</span>
+            </a>
+        </li>
+    </ul>
+</nav> 

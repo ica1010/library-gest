@@ -1,0 +1,109 @@
+{% extends "base_user.html" %}
+
+{% load static %}
+
+{% block title %}Accueil | Ma Librairie{% endblock title %}
+
+{% block content %}
+<!-- Slider Hero (Bootstrap Carousel) -->
+<div id="heroCarousel" class="carousel slide mb-8" data-bs-ride="carousel">
+  <div class="carousel-indicators">
+    <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+    <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+  </div>
+  <div class="carousel-inner rounded-xl overflow-hidden">
+    <div class="carousel-item active">
+      <img src="https://images-production.bookshop.org/spree/promo_banner_slides/desktop_images/315/original/State_of_Paradise_-_Hero_-_2048x600.jpg" class="d-block w-100" alt="Bannière 1" />
+    </div>
+    <div class="carousel-item">
+      <img src="https://images-production.bookshop.org/spree/promo_banner_slides/desktop_images/319/original/ThePeculiarGiftOfJuly_BookshopHero_Desktop.jpg" class="d-block w-100" alt="Bannière 2" />
+    </div>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Précédent</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Suivant</span>
+  </button>
+</div>
+
+<!-- Slider Livres par Catégorie -->
+{% for category in categories %}
+
+<section class="mb-10">
+  <div class="container">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-xl font-bold text-gray-800">{{ category.name }}</h2>
+      <a href="{% url 'books:category_books' category.id %}" class="text-blue-700 hover:underline text-sm">Voir tout</a>
+    </div>
+    <div class="owl-carousel owl-theme">
+      {% for book in category.book_set.all|slice:':12' %}
+      <div>
+        <a href="{% url 'books:detail' book.pk %}">
+          {% if book.cover_front %}
+            <img src="{{ book.cover_front.url }}" alt="{{ book.title }}" class="h-56 w-100 rounded-lg shadow-md block" style="margin:0;padding:0;" />
+          {% else %}
+            <div class="h-56 w-100 bg-gray-100 flex items-center justify-center rounded-lg">
+              <span class="text-gray-400">Pas d'image</span>
+            </div>
+          {% endif %}
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endfor %}
+
+
+<!-- Genres -->
+<section class="container mx-auto mb-12 px-2">
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-xl font-bold text-gray-800">Genres</h2>
+    <a href="{% url 'books:genres' %}" class="text-blue-700 hover:underline">Voir tout</a>
+  </div>
+  <div class="flex gap-3 flex-wrap">
+    {% for genre in genres %}
+    <a href="{% url 'books:genre_books' genre.id %}" class="bg-white rounded-full shadow px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-blue-50 border border-gray-100">{{ genre.name }}</a>
+    {% empty %}
+    <div class="text-gray-500">Aucun genre disponible.</div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- Call to action -->
+<section class="bg-blue-50 py-10">
+  <div class="container mx-auto text-center">
+    <h2 class="text-2xl font-bold text-gray-800 mb-2">Vous ne trouvez pas votre livre ?</h2>
+    <p class="text-gray-600 mb-4">Contactez-nous ou proposez une suggestion, nous enrichissons notre catalogue régulièrement !</p>
+    <a href="{% url 'contact' %}" class="inline-block bg-blue-700 text-white px-6 py-3 rounded-full shadow hover:bg-blue-800 transition">Nous contacter</a>
+  </div>
+</section>
+
+{% endblock content %}
+
+{% block scripts %}
+<script>
+  $(document).ready(function(){
+    $('.owl-carousel').owlCarousel({
+      loop:true,
+      margin:12,
+      nav:true,
+      dots:false,
+      responsive:{
+        0:{ items:2 },
+        600:{ items:3 },
+        1000:{ items:7 }
+      },
+      navText: [
+        '<i class="fa-solid fa-angle-left"></i>',
+        '<i class="fa-solid fa-angle-right"></i>'
+      ]
+    });
+  });
+</script>
+{% endblock scripts %}
+
+

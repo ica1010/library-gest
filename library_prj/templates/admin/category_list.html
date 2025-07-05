@@ -1,0 +1,151 @@
+{% extends "base_admin.html" %}
+{% block content %}
+<div class="content">
+    <div class="container-fluid">
+        <h2 class="mb-4">Catégories & Genres</h2>
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs mb-3" id="catGenreTabs" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="categories-tab" data-bs-toggle="tab" data-bs-target="#categories" type="button" role="tab" aria-controls="categories" aria-selected="true">Catégories</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="genres-tab" data-bs-toggle="tab" data-bs-target="#genres" type="button" role="tab" aria-controls="genres" aria-selected="false">Genres</button>
+          </li>
+        </ul>
+        <!-- Tab panes -->
+        <div class="tab-content">
+          <div class="tab-pane fade show active" id="categories" role="tabpanel" aria-labelledby="categories-tab">
+            <table class="table table-striped datatable">
+            <thead>
+                <tr>
+                        <th>Image</th>
+                    <th>Nom</th>
+                    <th>Description</th>
+                        <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for category in categories %}
+                <tr>
+                        <td>
+                          {% if category.image %}
+                            <img src="{{ category.image.url }}" alt="{{ category.name }}" class="img-category-admin" />
+                          {% else %}
+                            <span class="text-muted">—</span>
+                          {% endif %}
+                        </td>
+                    <td>{{ category.name }}</td>
+                    <td>{{ category.description }}</td>
+                        <td>
+                          <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#editCategoryModal-{{ category.id }}" title="Modifier"><i class="fa fa-edit"></i></button>
+                          <a href="{% url 'books:admin_delete_category' category.id %}" class="btn btn-sm btn-danger" title="Supprimer" onclick="return confirm('Confirmer la suppression ?');"><i class="fa fa-trash"></i></a>
+                        </td>
+                </tr>
+                    <!-- Modal modification catégorie -->
+                    <div class="modal fade" id="editCategoryModal-{{ category.id }}" tabindex="-1" aria-labelledby="editCategoryModalLabel-{{ category.id }}" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <form method="post" action="{% url 'books:admin_edit_category' category.id %}" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="editCategoryModalLabel-{{ category.id }}">Modifier la catégorie</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                            </div>
+                            <div class="modal-body">
+                              <div class="mb-3">
+                                <label for="image-{{ category.id }}" class="form-label">Image</label>
+                                {% if category.image %}
+                                  <img src="{{ category.image.url }}" alt="{{ category.name }}" class="img-category-admin mb-2" />
+                                {% endif %}
+                                <input type="file" class="form-control" id="image-{{ category.id }}" name="image" accept="image/*" />
+                              </div>
+                              <div class="mb-3">
+                                <label for="name-{{ category.id }}" class="form-label">Nom</label>
+                                <input type="text" class="form-control" id="name-{{ category.id }}" name="name" value="{{ category.name }}" required />
+                              </div>
+                              <div class="mb-3">
+                                <label for="description-{{ category.id }}" class="form-label">Description</label>
+                                <textarea class="form-control" id="description-{{ category.id }}" name="description">{{ category.description }}</textarea>
+                              </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                              <button type="submit" class="btn btn-primary">Enregistrer</button>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Fin modal catégorie -->
+                {% empty %}
+                <tr>
+                    <td colspan="2">Aucune catégorie disponible.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+          </div>
+          <div class="tab-pane fade" id="genres" role="tabpanel" aria-labelledby="genres-tab">
+            <table class="table table-striped datatable">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Description</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for genre in genres %}
+                    <tr>
+                        <td>{{ genre.name }}</td>
+                        <td>{{ genre.description }}</td>
+                        <td>
+                          <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#editGenreModal-{{ genre.id }}" title="Modifier"><i class="fa fa-edit"></i></button>
+                          <a href="{% url 'books:admin_delete_genre' genre.id %}" class="btn btn-sm btn-danger" title="Supprimer" onclick="return confirm('Confirmer la suppression ?');"><i class="fa fa-trash"></i></a>
+                        </td>
+                    </tr>
+                    <!-- Modal modification genre -->
+                    <div class="modal fade" id="editGenreModal-{{ genre.id }}" tabindex="-1" aria-labelledby="editGenreModalLabel-{{ genre.id }}" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <form method="post" action="{% url 'books:admin_edit_genre' genre.id %}">
+                            {% csrf_token %}
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="editGenreModalLabel-{{ genre.id }}">Modifier le genre</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                            </div>
+                            <div class="modal-body">
+                              <div class="mb-3">
+                                <label for="name-genre-{{ genre.id }}" class="form-label">Nom</label>
+                                <input type="text" class="form-control" id="name-genre-{{ genre.id }}" name="name" value="{{ genre.name }}" required />
+                              </div>
+                              <div class="mb-3">
+                                <label for="description-genre-{{ genre.id }}" class="form-label">Description</label>
+                                <textarea class="form-control" id="description-genre-{{ genre.id }}" name="description">{{ genre.description }}</textarea>
+                              </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                              <button type="submit" class="btn btn-primary">Enregistrer</button>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Fin modal genre -->
+                    {% endfor %}
+                </tbody>
+            </table>
+          </div>
+        </div>
+    </div>
+</div>
+<style>
+.img-category-admin {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+</style>
+{% endblock content %} 

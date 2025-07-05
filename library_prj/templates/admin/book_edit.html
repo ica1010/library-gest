@@ -1,0 +1,185 @@
+{% extends "base_admin.html" %}
+{% load static %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Modifier le livre</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="row">
+      <div class="col-md-6">
+        <div class="mb-3">
+          <label for="title" class="form-label">Titre</label>
+          <input type="text" class="form-control" id="title" name="title" value="{{ book.title }}" required />
+        </div>
+        <div class="mb-3">
+          <label for="isbn" class="form-label">ISBN</label>
+          <input type="text" class="form-control" id="isbn" name="isbn" value="{{ book.isbn }}" required />
+        </div>
+        <div class="mb-3">
+          <label for="stock" class="form-label">Stock</label>
+          <input type="number" class="form-control" id="stock" name="stock" min="0" value="{{ book.stock }}" required />
+        </div>
+        <div class="mb-3">
+          <label for="price" class="form-label">Prix</label>
+          <input type="number" class="form-control" id="price" name="price" min="0" step="0.01" value="{{ book.price }}" required />
+        </div>
+        <div class="mb-3">
+          <label for="publication_date" class="form-label">Date de publication</label>
+          <input type="date" class="form-control datepicker" id="publication_date" name="publication_date" value="{{ book.publication_date|date:'Y-m-d' }}" />
+        </div>
+        <div class="mb-3">
+          <label for="pages" class="form-label">Nombre de pages</label>
+          <input type="number" class="form-control" id="pages" name="pages" min="1" value="{{ book.pages }}" />
+        </div>
+        <div class="mb-3">
+          <label for="language" class="form-label">Langue</label>
+          <select class="form-control select2" id="language" name="language" required>
+            <option value="">Choisir la langue</option>
+            {% for lang in languages %}
+              <option value="{{ lang }}" {% if book.language == lang %}selected{% endif %}>{{ lang }}</option>
+            {% endfor %}
+            {% if book.language and book.language not in languages %}
+              <option value="{{ book.language }}" selected>{{ book.language }}</option>
+            {% endif %}
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="categories" class="form-label">Catégories</label>
+          <select class="form-control select2" id="categories" name="categories" multiple required>
+            {% for category in categories %}
+              <option value="{{ category.id }}" {% if category in book.categories.all %}selected{% endif %}>{{ category.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="genres" class="form-label">Genres</label>
+          <select class="form-control select2" id="genres" name="genres" multiple required>
+            {% for genre in genres %}
+              <option value="{{ genre.id }}" {% if genre in book.genres.all %}selected{% endif %}>{{ genre.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="auteurs" class="form-label">Auteurs</label>
+          <select class="form-control select2" id="auteurs" name="auteurs" multiple>
+            {% for auteur in auteurs %}
+              <option value="{{ auteur.id }}" {% if auteur in book.auteurs.all %}selected{% endif %}>{{ auteur }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="editeur" class="form-label">Éditeur</label>
+          <select class="form-control select2" id="editeur" name="editeur">
+            <option value="">Aucun</option>
+            {% for ed in editeurs %}
+              <option value="{{ ed.id }}" {% if book.editeur and ed.id == book.editeur.id %}selected{% endif %}>{{ ed.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="format" class="form-label">Format</label>
+          <input type="text" class="form-control" id="format" name="format" value="{{ book.format }}" />
+        </div>
+        <div class="mb-3">
+          <label for="dimensions" class="form-label">Dimensions</label>
+          <input type="text" class="form-control" id="dimensions" name="dimensions" value="{{ book.dimensions }}" placeholder="ex: 15x22 cm" />
+        </div>
+        <div class="mb-3">
+          <label for="poids" class="form-label">Poids (kg)</label>
+          <input type="number" class="form-control" id="poids" name="poids" min="0" step="0.01" value="{{ book.poids }}" />
+        </div>
+        <div class="mb-3">
+          <label for="code_barres" class="form-label">Code-barres</label>
+          <input type="text" class="form-control" id="code_barres" name="code_barres" value="{{ book.code_barres }}" />
+        </div>
+        <div class="mb-3">
+          <label for="illustrateur" class="form-label">Illustrateur</label>
+          <input type="text" class="form-control" id="illustrateur" name="illustrateur" value="{{ book.illustrateur }}" />
+        </div>
+        <div class="mb-3">
+          <label for="collection" class="form-label">Collection</label>
+          <input type="text" class="form-control" id="collection" name="collection" value="{{ book.collection }}" />
+        </div>
+        <div class="mb-3">
+          <label for="niveau_scolaire" class="form-label">Niveau scolaire</label>
+          <input type="text" class="form-control" id="niveau_scolaire" name="niveau_scolaire" value="{{ book.niveau_scolaire }}" />
+        </div>
+        <div class="mb-3">
+          <label for="public_cible" class="form-label">Public cible</label>
+          <input type="text" class="form-control" id="public_cible" name="public_cible" value="{{ book.public_cible }}" />
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="mb-3">
+          <label for="cover_front" class="form-label">Image de couverture (avant)</label>
+          {% if book.cover_front %}
+            <img src="{{ book.cover_front.url }}" alt="Couverture actuelle" class="img-cover-mini mb-2" />
+          {% endif %}
+          <input type="file" class="filepond" id="cover_front" name="cover_front" accept="image/*" />
+        </div>
+        <div class="mb-3">
+          <label for="cover_back" class="form-label">Image de couverture (arrière)</label>
+          {% if book.cover_back %}
+            <img src="{{ book.cover_back.url }}" alt="Couverture arrière actuelle" class="img-cover-mini mb-2" />
+          {% endif %}
+          <input type="file" class="filepond" id="cover_back" name="cover_back" accept="image/*" />
+        </div>
+        <div class="mb-3">
+          <label for="summary" class="form-label">Résumé</label>
+          <textarea class="form-control" id="summary" name="summary" rows="7" required>{{ book.summary }}</textarea>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <a href="{% url 'books:admin_list' %}" class="btn btn-secondary">Annuler</a>
+      <button type="submit" class="btn btn-primary">Enregistrer</button>
+    </div>
+  </form>
+</div>
+{% endblock content %}
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // FilePond (CDN)
+    if (window.FilePond && window.FilePondPluginImagePreview) {
+      FilePond.registerPlugin(FilePondPluginImagePreview);
+      FilePond.create(document.querySelector('#cover_front'), {
+        labelIdle: 'Glissez & déposez ou <span class="filepond--label-action">Parcourir</span> (avant)',
+        imagePreviewHeight: 100,
+        allowMultiple: false,
+        acceptedFileTypes: ['image/*']
+      });
+      FilePond.create(document.querySelector('#cover_back'), {
+        labelIdle: 'Glissez & déposez ou <span class="filepond--label-action">Parcourir</span> (arrière)',
+        imagePreviewHeight: 100,
+        allowMultiple: false,
+        acceptedFileTypes: ['image/*']
+      });
+    }
+    // Select2 (CDN)
+    if (window.jQuery && $.fn.select2) {
+      $('#categories').select2({
+        tags: true,
+        placeholder: 'Choisir ou créer une catégorie',
+        allowClear: true,
+        width: '100%',
+        tokenSeparators: [',']
+      });
+      $('#genres').select2({
+        tags: true,
+        placeholder: 'Choisir ou créer un genre',
+        allowClear: true,
+        width: '100%',
+        tokenSeparators: [',']
+      });
+      $('#language').select2({
+        tags: true,
+        placeholder: 'Choisir ou créer une langue',
+        allowClear: true,
+        width: '100%',
+        tokenSeparators: [',']
+      });
+    }
+  });
+</script>
+{% endblock extra_js %} 

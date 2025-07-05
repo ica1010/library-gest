@@ -1,0 +1,43 @@
+{% extends "base_user.html" %}
+{% load static %}
+{% block title %}Catégories{% endblock title %}
+{% block content %}
+<section class="category-section">
+    <div class="container">
+        <div class="section-heading">
+            <div class="row align-items-center">
+                <div class="col-md-6 aos" data-aos="fade-up">
+                    <h2>Nos <span class="title-left">Cat</span>égories</h2>
+                    <p>Retrouvez toutes les catégories de livres disponibles</p>
+                </div>
+                <div class="col-md-6 text-md-end aos" data-aos="fade-up">
+                    <a href="{% url 'books:categories' %}" class="btn btn-view">Voir toutes les catégories</a>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            {% for category in categories %}
+            <div class="col-lg-2 col-md-3 col-sm-6 mb-4">
+                {% if category.id %}
+                <a href="{% url 'books:category_books' category.id %}" class="category-links d-block text-center p-3 h-100">
+                {% else %}
+                <a href="#" class="category-links d-block text-center p-3 h-100 disabled" title="ID manquant">
+                {% endif %}
+                    <h5>{{ category.name }}</h5>
+                    <span>{{ category.book_set.count }} Livres</span>
+                    {% if category.image %}
+                        <img src="{{ category.image.url }}" alt="{{ category.name }}" class="img-fluid my-2" style="height:60px;object-fit:contain;" />
+                    {% else %}
+                        <img src="{% static 'assets/img/icons/category-1.svg' %}" alt="icons" class="img-fluid my-2" style="height:60px;object-fit:contain;" />
+                    {% endif %}
+                </a>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <p>Aucune catégorie disponible.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock content %} 

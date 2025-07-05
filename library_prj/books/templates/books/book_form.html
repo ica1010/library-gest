@@ -1,0 +1,10 @@
+{% extends "base_user.html" %}
+{% block title %}Ajouter un livre{% endblock title %}
+{% block content %}
+<h1>Ajouter un livre</h1>
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit" class="btn btn-primary">Enregistrer</button>
+</form>
+{% endblock content %} 

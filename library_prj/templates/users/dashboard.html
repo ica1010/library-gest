@@ -1,0 +1,107 @@
+{% extends "base_user.html" %}
+{% load static %}
+
+{% block title %}Tableau de bord | Ma Librairie{% endblock title %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-3">
+        {% include "includes/user/menu.html" %}
+        </div>
+        <div class="col-md-9">
+            <h2 class="mb-4">Bienvenue, {{ user.username }} !</h2>
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <img src="{% static 'assets/img/icons/verified.svg' %}" class="mb-2" alt="Emprunts" width="40" />
+                            <h6>Emprunts en cours</h6>
+                            <h3>{{ loans_count }}</h3>
+                            <a href="{% url 'loans:my_loans' %}" class="btn btn-outline-primary btn-sm mt-2">Voir mes emprunts</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <img src="{% static 'assets/img/icons/bookmark.svg' %}" class="mb-2" alt="Réservations" width="40" />
+                            <h6>Réservations actives</h6>
+                            <h3>{{ reservations_count }}</h3>
+                            <a href="{% url 'reservations:my_reservations' %}" class="btn btn-outline-primary btn-sm mt-2">Voir mes
+                                réservations</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <img src="{% static 'assets/img/icons/cart.svg' %}" class="mb-2" alt="Panier" width="40" />
+                            <h6>Articles dans le panier</h6>
+                            <h3>{{ cart_count }}</h3>
+                            <a href="{% url 'sales:view_cart' %}" class="btn btn-outline-primary btn-sm mt-2">Voir mon panier</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <img src="{% static 'assets/img/icons/user.svg' %}" class="mb-2" alt="Profil" width="40" />
+                            <h6>Mon profil</h6>
+                            <h3><i class="fa fa-user"></i></h3>
+                            <a href="{% url 'users:dashboard' %}" class="btn btn-outline-primary btn-sm mt-2">Voir mon profil</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="alert alert-info">N’hésitez pas à consulter vos emprunts, réservations ou à parcourir le catalogue !</div>
+            <h4 class="mt-5 mb-3">Livres à découvrir</h4>
+            <div class="row">
+              {% for book in books %}
+              <div class="col-md-3 mb-4">
+                <div class="card h-100 shadow-sm book-card">
+                  <a href="{% url 'books:detail' book.pk %}" class="d-block text-decoration-none h-100">
+                    <div class="book-card-img text-center pt-3">
+                      {% if book.cover_front %}
+                        <img src="{{ book.cover_front.url }}" class="img-fluid rounded" alt="{{ book.title }}" style="height:160px;object-fit:cover;" />
+                      {% else %}
+                        <span class="img-category-placeholder d-block mx-auto mb-2" style="height:160px;"></span>
+                      {% endif %}
+                    </div>
+                    <div class="p-2">
+                      <h6 class="mb-1 text-dark">{{ book.title }}</h6>
+                      {% if book.author %}
+                        <div class="text-muted small mb-1">par {{ book.author }}</div>
+                      {% endif %}
+                      <div class="mb-1">
+                        {% if book.avg_rating %}
+                          {% for i in star_range %}
+                            <i class="fas fa-star{% if i <= book.avg_rating %} filled text-warning{% endif %}"></i>
+                          {% endfor %}
+                          <span class="ms-1 text-dark">{{ book.avg_rating|floatformat:1 }}</span>
+                        {% else %}
+                          <span class="text-muted">Pas encore de note</span>
+                        {% endif %}
+                      </div>
+                      <div class="d-flex justify-content-between mt-2">
+                        {% if book.stock > 0 %}
+                          <a href="{% url 'loans:loan_book' book.id %}" class="btn btn-warning btn-sm">Emprunter</a>
+                        {% else %}
+                          <button class="btn btn-secondary btn-sm" disabled>Indisponible</button>
+                        {% endif %}
+                        <a href="{% url 'sales:add_to_cart' book.id %}" class="btn btn-success btn-sm">Commander</a>
+                      </div>
+                      <div class="text-end">
+                        <span class="btn btn-outline-primary btn-sm">Voir le livre <i class="feather-arrow-right"></i></span>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+        </div>
+    </div>
+  
+</div>
+{% endblock content %} 

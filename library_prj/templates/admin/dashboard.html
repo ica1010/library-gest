@@ -1,0 +1,178 @@
+{% extends "base_admin.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid pt-4">
+  <h2 class="mb-4">Tableau de bord administrateur</h2>
+  <!-- Statistiques clés -->
+  <div class="row mb-4">
+    <div class="col-md-3">
+      <div class="card text-center">
+                <div class="card-body">
+          <h5 class="card-title">Livres</h5>
+          <h2>{{ stats.books }}</h2>
+                            </div>
+                            </div>
+                        </div>
+    <div class="col-md-3">
+      <div class="card text-center">
+                <div class="card-body">
+          <h5 class="card-title">Emprunts en cours</h5>
+          <h2>{{ stats.loans_ongoing }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-center">
+                <div class="card-body">
+          <h5 class="card-title">Commandes</h5>
+          <h2>{{ stats.sales }}</h2>
+                                </div>
+                            </div>
+                        </div>
+    <div class="col-md-3">
+      <div class="card text-center">
+                <div class="card-body">
+          <h5 class="card-title">Utilisateurs</h5>
+          <h2>{{ stats.users }}</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+  <!-- Graphiques (placeholders) -->
+  <div class="row mb-4">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">Emprunts par mois</div>
+        <div class="card-body">
+          <canvas id="chart-loans" height="250"></canvas>
+        </div>
+                                </div>
+                            </div>
+    <div class="col-md-6">
+            <div class="card">
+        <div class="card-header">Top livres empruntés</div>
+                <div class="card-body">
+          <ul class="list-group">
+            {% for book in top_books %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              {{ book.title }}
+              <span class="badge bg-primary rounded-pill">{{ book.nb }}</span>
+                                        </li>
+            {% empty %}
+            <li class="list-group-item">Aucun livre</li>
+            {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+  <!-- Alertes -->
+  <div class="row mb-4">
+    <div class="col-md-6">
+      <div class="alert alert-warning">
+        <strong>{{ stats.loans_late }}</strong> emprunt(s) en retard à traiter !
+        </div>
+                                </div>
+    <div class="col-md-6">
+      <div class="alert alert-info">
+        <strong>{{ stats.sales_pending }}</strong> commande(s) en attente de validation.
+                        </div>
+                    </div>
+                </div>
+  <!-- Tableaux récents -->
+  <div class="row mb-4">
+    <div class="col-md-6">
+            <div class="card">
+        <div class="card-header">Derniers emprunts</div>
+        <div class="card-body p-0">
+          <table class="table mb-0">
+            <thead><tr><th>Utilisateur</th><th>Livre</th><th>Date</th><th>Statut</th></tr></thead>
+                                <tbody>
+              {% for loan in last_loans %}
+              <tr><td>{{ loan.user }}</td><td>{{ loan.book }}</td><td>{{ loan.loan_date|date:'d/m/Y' }}</td><td>{{ loan.status }}</td></tr>
+              {% empty %}<tr><td colspan="4">Aucun emprunt</td></tr>{% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+    <div class="col-md-6">
+            <div class="card">
+        <div class="card-header">Dernières commandes</div>
+        <div class="card-body p-0">
+          <table class="table mb-0">
+            <thead><tr><th>Utilisateur</th><th>Date</th><th>Total</th><th>Statut</th></tr></thead>
+                                <tbody>
+              {% for sale in last_sales %}
+              <tr><td>{{ sale.user }}</td><td>{{ sale.date|date:'d/m/Y H:i' }}</td><td>{{ sale.total }} €</td><td>{{ sale.status }}</td></tr>
+              {% empty %}<tr><td colspan="4">Aucune commande</td></tr>{% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    <div class="col-md-12 mt-4">
+            <div class="card">
+        <div class="card-header">Derniers avis utilisateurs</div>
+        <div class="card-body p-0">
+          <table class="table mb-0">
+            <thead><tr><th>Utilisateur</th><th>Livre</th><th>Note</th><th>Commentaire</th><th>Date</th><th>Statut</th></tr></thead>
+                                <tbody>
+              {% for review in last_reviews %}
+              <tr>
+                <td>{{ review.user }}</td>
+                <td>{{ review.book }}</td>
+                <td>{{ review.rating }}/5</td>
+                <td>{{ review.comment|truncatechars:40 }}</td>
+                <td>{{ review.date|date:'d/m/Y H:i' }}</td>
+                <td>{% if review.is_approved %}<span class="badge bg-success">Validé</span>{% else %}<span class="badge bg-warning text-dark">En attente</span>{% endif %}</td>
+                                    </tr>
+              {% empty %}<tr><td colspan="6">Aucun avis</td></tr>{% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+  <!-- Actions rapides -->
+  <div class="row mb-4">
+    <div class="col-md-12 text-end">
+      <a href="{% url 'books:admin_add' %}" class="btn btn-primary">Ajouter un livre</a>
+      <a href="{% url 'books:admin_categories' %}" class="btn btn-secondary">Gérer les catégories</a>
+      <a href="{% url 'books:admin_loan_list' %}" class="btn btn-warning">Voir les emprunts</a>
+      <a href="{% url 'books:admin_sale_list' %}" class="btn btn-info">Voir les commandes</a>
+        </div>
+    </div>
+</div>
+{% endblock content %} 
+
+{% block extra_js %}
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var ctx = document.getElementById('chart-loans').getContext('2d');
+  var chart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+          labels: {{ chart_labels|safe }},
+          datasets: [{
+              label: 'Emprunts par mois',
+              data: {{ chart_data|safe }},
+              backgroundColor: 'rgba(54, 162, 235, 0.5)',
+              borderColor: 'rgba(54, 162, 235, 1)',
+              borderWidth: 1
+          }]
+      },
+      options: {
+          responsive: true,
+          scales: {
+              y: { beginAtZero: true }
+          }
+      }
+  });
+});
+</script>
+{% endblock extra_js %} 

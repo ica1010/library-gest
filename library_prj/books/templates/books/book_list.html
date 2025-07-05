@@ -1,0 +1,49 @@
+{% extends "base_user.html" %}
+{% load static %}
+{% block title %}Liste des livres{% endblock title %}
+{% block content %}
+<div class="container pt-4">
+  <h1 class="mb-6 text-2xl font-bold">Liste des livres</h1>
+  <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+    {% for book in books %}
+    <li class="grid grid-cols-1 items-baseline gap-x-4">
+      <div class="flex flex-col">
+        <div class="relative h-[302px] w-full rounded border border-[#f0f0f0] bg-gray-50">
+          <a aria-label="link for {{ book.title }}" class="absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center p-4" href="{% url 'books:detail' book.pk %}">
+            <div class="book-cover-shadow hover:shadow-[0px_11px_18px_rgba(0,0,0,0.3)] relative block rounded-[3px] transition duration-200 ease-in-out hover:scale-[1.025]">
+              {% if book.cover_front %}
+                <img alt="bookcover for {{ book.title }}" aria-label="bookcover for {{ book.title }}" loading="lazy" width="167" height="250" decoding="async" class="rounded-[3px] object-contain max-h-[250px] max-w-[167px]" src="{{ book.cover_front.url }}" />
+              {% else %}
+                <div class="flex items-center justify-center h-[250px] w-[167px] bg-gray-200 rounded-[3px] text-gray-400">Pas d'image</div>
+              {% endif %}
+              <div class="absolute left-0 top-0 h-full w-[11px] rounded-[4px] bg-gradient-to-r from-[rgba(0,0,0,0.15)] to-[rgba(196,196,196,0.00)]"></div>
+              <div class="absolute right-0 top-0 h-full w-[11px] rounded-[4px] bg-gradient-to-l from-[rgba(0,0,0,0.15)] to-[rgba(196,196,196,0.00)]"></div>
+            </div>
+          </a>
+        </div>
+        <a href="{% url 'books:detail' book.pk %}"><h2 class="fw-700 mt-2 line-clamp-5 font-sans text-[16px] text-base font-bold tracking-tight">{{ book.title }}</h2></a>
+        <p class="my-1 flex items-end text-[16px]">{{ book.author }}</p>
+        {% if book.price or book.old_price %}
+          <div class="my-2 flex items-start gap-2">
+            {% if book.old_price %}
+              <span class="text-red-500 line-through">{{ book.old_price }}</span>
+            {% endif %}
+            {% if book.price %}
+              <span class="font-bold text-green-700 text-lg">{{ book.price }} </span>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+      <div class="flex w-full self-end mt-2">
+        <button aria-label="Ajouter au panier" class="tag-label size-lg flex w-full items-center justify-center gap-1 whitespace-nowrap rounded-full border border-solid border-green-600 bg-green-600 px-8 py-3 text-center text-sm font-bold uppercase leading-5 tracking-wide text-white transition-opacity duration-300 hover:bg-green-700">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437m0 0L7.5 15.75A2.25 2.25 0 009.664 18h7.086a2.25 2.25 0 002.164-1.672l1.715-6.858A1.125 1.125 0 0020.625 8.25H6.272m-1.166-2.978L4.5 6.75m0 0H19.5" /></svg>
+          <span class="text-center text-sm font-bold leading-5 tracking-[0.2px]">Ajouter au panier</span>
+        </button>
+      </div>
+    </li>
+    {% empty %}
+    <li class="col-span-full text-gray-500">Aucun livre disponible.</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock content %} 

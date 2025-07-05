@@ -1,0 +1,215 @@
+{% extends "base_user.html" %}
+{% load static %}
+
+{% block title %}{{ book.title }} | Détail du livre{% endblock title %}
+
+<style>
+.img-category-placeholder {
+    width: 100%;
+    height: 320px;
+    background: #eee;
+    border-radius: 8px;
+    display: inline-block;
+    margin-bottom: 0.5rem;
+}
+.img-cover-mini {
+    width: 90px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 8px;
+    background: #eee;
+    display: inline-block;
+}
+</style>
+
+{% block content %}
+<main role="main" aria-label="Contenu principal" class="flex w-full flex-shrink-0 flex-col items-center justify-center p-3 lg:mx-auto lg:min-h-screen lg:max-w-7xl lg:gap-6 lg:px-8 lg:py-6">
+  <div class="flex w-full flex-col lg:w-[1000px]">
+    <div class="flex w-full flex-col items-center lg:flex-row lg:items-start lg:space-x-12">
+      <!-- Couverture -->
+      <div class="flex flex-col items-center lg:sticky lg:top-[185px] lg:max-w-[260px]">
+        <div class="relative block max-w-[260px] rounded-[3px]">
+          {% if book.cover_front %}
+            <img alt="{{ book.title }} bookcover" aria-label="bookcover" width="260" height="390" decoding="async" class="flex-shrink-0 rounded h-[390px] w-[260px] object-contain" src="{{ book.cover_front.url }}" />
+          {% else %}
+            <div class="flex items-center justify-center h-[390px] w-[260px] bg-gray-200 rounded text-gray-400">Pas d'image</div>
+          {% endif %}
+        </div>
+      </div>
+      <!-- Infos principales -->
+      <div class="flex-basis-0 mt-2 flex w-full flex-grow flex-col items-start space-y-6 px-2 lg:mt-0">
+        <div class="flex flex-col items-start space-y-2 self-stretch">
+          <h1 class="title size-sm lg:size-xl mt-4 font-bold text-2xl">{{ book.title }}</h1>
+            <div class="mb-4">
+                {% if avg_rating %}
+                <div class="flex items-center gap-2">
+                    {% for i in star_range %}
+                    <i class="fas fa-star{% if i <= avg_rating %} text-yellow-400{% else %} text-gray-300{% endif %}"></i>
+                    {% endfor %}
+                    <span class="ml-2 text-base font-semibold">{{ avg_rating }}/5</span>
+                </div>
+                {% else %}
+                <span class="text-muted">Pas encore de note</span>
+                {% endif %}
+            </div>
+          {% if book.summary %}<div class="text-[16px] text-dark lg:text-[18px]">{{ book.summary|linebreaksbr }}</div>{% endif %}
+          <div class="flex w-full flex-wrap">
+            <div class="flex flex-row flex-wrap items-center text-wrap">
+              {% for auteur in book.auteurs.all %}
+                <span class="flex text-sm text-purple lg:text-base">{{ auteur }}{% if not forloop.last %}, {% endif %}</span>
+              {% empty %}
+                <span class="text-sm text-gray-500">Auteur inconnu</span>
+              {% endfor %}
+              <span class="text-sm text-default lg:text-base">(Auteur{% if book.auteurs.count > 1 %}s{% endif %})</span>
+            </div>
+          </div>
+        </div>
+        <!-- Prix, stock, format -->
+        <div class="flex flex-col gap-3 w-full max-w-xs">
+          <div class="my-2 flex flex-col justify-center">
+            <div class="flex items-center">
+              <p class="ml-1 mr-3 text-[16px] text-dark">{{ book.format|default:'Livre' }}</p>
+            </div>
+          </div>
+          <div class="ml-1 flex gap-1.5">
+            <span class="font-bold text-green-700 text-2xl">{{ book.price }}</span>
+            {% if book.stock > 0 %}
+              <span class="subtitle text-mint">En stock</span>
+            {% else %}
+              <span class="subtitle text-red-500">Indisponible</span>
+            {% endif %}
+          </div>
+          <div class="flex flex-row gap-3 mt-2">
+            <form method="post" action="{% url 'sales:add_to_cart' book.id %}">
+              {% csrf_token %}
+              <button aria-label="Ajouter au panier" type="submit" class="tag-label size-lg flex items-center justify-center gap-1 whitespace-nowrap rounded-full border border-solid border-green-600 bg-green-600 px-8 py-3 text-center text-sm font-bold uppercase leading-5 tracking-wide text-white transition-opacity duration-300 hover:bg-green-700">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437m0 0L7.5 15.75A2.25 2.25 0 009.664 18h7.086a2.25 2.25 0 002.164-1.672l1.715-6.858A1.125 1.125 0 0020.625 8.25H6.272m-1.166-2.978L4.5 6.75m0 0H19.5" /></svg>
+                <span class="text-center text-sm font-bold leading-5 tracking-[0.2px]">Ajouter au panier</span>
+              </button>
+            </form>
+            {% if book.stock > 0 %}
+            <a href="{% url 'reservations:reserve_book' book.id %}" class="tag-label size-lg flex items-center justify-center gap-1 whitespace-nowrap rounded-full border border-solid border-blue-600 bg-blue-600 px-8 py-3 text-center text-sm font-bold uppercase leading-5 tracking-wide text-white transition-opacity duration-300 hover:bg-blue-700">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75A2.25 2.25 0 0014.25 4.5h-4.5A2.25 2.25 0 007.5 6.75v3.75m9 0v6.75A2.25 2.25 0 0114.25 19.5h-4.5A2.25 2.25 0 017.5 17.25V10.5m9 0h-9" /></svg>
+              <span class="text-center text-sm font-bold leading-5 tracking-[0.2px]">Réserver</span>
+            </a>
+            {% if not has_active_loan %}
+            <a href="{% url 'loans:loan_book' book.id %}" class="tag-label size-lg flex items-center justify-center gap-1 whitespace-nowrap rounded-full border border-solid border-yellow-600 bg-yellow-500 px-8 py-3 text-center text-sm font-bold uppercase leading-5 tracking-wide text-white transition-opacity duration-300 hover:bg-yellow-600">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2" /></svg>
+              <span class="text-center text-sm font-bold leading-5 tracking-[0.2px]">Emprunter</span>
+            </a>
+            {% endif %}
+            {% endif %}
+          </div>
+        </div>
+        <!-- Détails produit -->
+        <div class="mt-4">
+          <details open class="group flex flex-col gap-4 self-stretch">
+            <summary class="flex cursor-pointer items-center justify-between"><p class="title size-sm lg:size-md">Détails du livre</p></summary>
+            <div class="py-4">
+              <table class="table-auto">
+                <tbody>
+                  <tr><td class="text-default">ISBN</td><td class="py-0.5 pl-5">{{ book.isbn }}</td></tr>
+                  <tr><td class="text-default">Date de publication</td><td class="py-0.5 pl-5">{{ book.publication_date|date:'d/m/Y' }}</td></tr>
+                  <tr><td class="text-default">Pages</td><td class="py-0.5 pl-5">{{ book.pages }}</td></tr>
+                  <tr><td class="text-default">Langue</td><td class="py-0.5 pl-5">{{ book.language }}</td></tr>
+                  <tr><td class="text-default">Format</td><td class="py-0.5 pl-5">{{ book.format }}</td></tr>
+                  <tr><td class="text-default">Dimensions</td><td class="py-0.5 pl-5">{{ book.dimensions }}</td></tr>
+                  <tr><td class="text-default">Poids</td><td class="py-0.5 pl-5">{{ book.poids }} kg</td></tr>
+                  <tr><td class="text-default">Éditeur</td><td class="py-0.5 pl-5">{{ book.editeur }}</td></tr>
+                  <tr><td class="text-default">Collection</td><td class="py-0.5 pl-5">{{ book.collection }}</td></tr>
+                  <tr><td class="text-default">Illustrateur</td><td class="py-0.5 pl-5">{{ book.illustrateur }}</td></tr>
+                  <tr><td class="text-default">Code-barres</td><td class="py-0.5 pl-5">{{ book.code_barres }}</td></tr>
+                  <tr><td class="text-default">Niveau scolaire</td><td class="py-0.5 pl-5">{{ book.niveau_scolaire }}</td></tr>
+                  <tr><td class="text-default">Public cible</td><td class="py-0.5 pl-5">{{ book.public_cible }}</td></tr>
+                  <tr><td class="text-default">Date d'ajout</td><td class="py-0.5 pl-5">{{ book.date_ajout|date:'d/m/Y H:i' }}</td></tr>
+                  <tr><td class="text-default">Catégories</td><td class="py-0.5 pl-5">{% for cat in book.categories.all %}{{ cat.name }}{% if not forloop.last %}, {% endif %}{% empty %}Aucune{% endfor %}</td></tr>
+                  <tr><td class="text-default">Genres</td><td class="py-0.5 pl-5">{% for gen in book.genres.all %}{{ gen.name }}{% if not forloop.last %}, {% endif %}{% empty %}Aucun{% endfor %}</td></tr>
+                  <tr><td class="text-default">Stock</td><td class="py-0.5 pl-5">{{ book.stock }}</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </details>
+        </div>
+        <!-- Avis -->
+        <div class="mt-4 w-full">
+          <details open class="group flex flex-col gap-4 self-stretch">
+            <summary class="flex cursor-pointer items-center justify-between"><p class="title size-sm lg:size-md">Avis des lecteurs</p></summary>
+            <div class="bulleted-lists py-4">
+              <!-- Note moyenne -->
+              <div class="mb-4">
+                {% if avg_rating %}
+                  <div class="flex items-center gap-2">
+                    {% for i in star_range %}
+                      <i class="fas fa-star{% if i <= avg_rating %} text-yellow-400{% else %} text-gray-300{% endif %}"></i>
+                    {% endfor %}
+                    <span class="ml-2 text-base font-semibold">{{ avg_rating }}/5</span>
+                  </div>
+                {% else %}
+                  <span class="text-muted">Pas encore de note</span>
+                {% endif %}
+              </div>
+              <!-- Liste des avis -->
+              {% if reviews %}
+                <ul class="list-unstyled">
+                  {% for review in reviews %}
+                  <li class="review-box feedbackbox mb-3 border-b pb-2">
+                    <div class="review-details">
+                      <strong>{{ review.user }}</strong>
+                      <span class="text-muted small">le {{ review.date|date:'d/m/Y' }}</span>
+                      <div class="rating mb-1">
+                        {% for i in star_range %}
+                          <i class="fas fa-star{% if i <= review.rating %} text-yellow-400{% else %} text-gray-300{% endif %}"></i>
+                        {% endfor %}
+                        <span class="d-inline-block average-rating"> {{ review.rating }}/5 </span>
+                      </div>
+                      <p>{{ review.comment|linebreaksbr }}</p>
+                    </div>
+                  </li>
+                  {% endfor %}
+                </ul>
+              {% else %}
+                <p class="text-muted">Aucun avis pour ce livre.</p>
+              {% endif %}
+              <!-- Formulaire de note -->
+              {% if user.is_authenticated %}
+                {% if can_review and not user_has_reviewed %}
+                <div class="card mt-4">
+                  <div class="card-header bg-gray-50 border-b">
+                    <h4 class="mb-0">Laisser un avis</h4>
+                  </div>
+                  <div class="card-body">
+                    <form method="post" action="">
+                      {% csrf_token %}
+                      <div class="mb-3">
+                        <label for="id_rating" class="form-label">Note</label>
+                        <div id="id_rating" class="flex gap-1">
+                          {% for i in "54321" %}
+                            <input type="radio" name="rating" value="{{ i }}" id="star{{ i }}" required class="hidden peer" />
+                            <label for="star{{ i }}" class="cursor-pointer text-2xl text-gray-300 peer-checked:text-yellow-400"><i class="fas fa-star"></i></label>
+                          {% endfor %}
+                        </div>
+                      </div>
+                      <div class="mb-3">
+                        <label for="id_comment" class="form-label">Votre avis (optionnel)</label>
+                        <textarea name="comment" id="id_comment" class="form-control w-full border rounded p-2" rows="3"></textarea>
+                      </div>
+                      <button type="submit" class="btn btn-primary">Soumettre l'avis</button>
+                    </form>
+                  </div>
+                </div>
+                {% elif user_has_reviewed %}
+                  <div class="alert alert-info mt-4">Vous avez déjà laissé un avis pour ce livre.</div>
+                {% else %}
+                  <div class="alert alert-warning mt-4">Vous devez avoir emprunté ou acheté ce livre pour laisser un avis.</div>
+                {% endif %}
+              {% else %}
+                <div class="alert alert-warning mt-4">Connectez-vous pour laisser un avis.</div>
+              {% endif %}
+            </div>
+          </details>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock content %} 
