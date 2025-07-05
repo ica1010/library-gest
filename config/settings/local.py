@@ -11,7 +11,7 @@ DEBUG = True
 SECRET_KEY ="yYPmXVXwSxZVqfF7tUWNUO9iVttv6H1mVx9MHBDlvi0YO5lc76bzfo7BBwUPHGzG",
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1"]  # noqa: S104
+ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1", "library-gest.onrender.com", "*"]  # noqa: S104
 
 # CACHES
 # ------------------------------------------------------------------------------
