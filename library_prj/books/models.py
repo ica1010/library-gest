@@ -41,7 +41,6 @@ class Book(models.Model):
     dimensions = models.CharField(max_length=100, blank=True)
     poids = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
     date_ajout = models.DateTimeField(auto_now_add=True)
-    code_barres = models.CharField(max_length=50, blank=True)
     illustrateur = models.CharField(max_length=100, blank=True)
     collection = models.CharField(max_length=100, blank=True)
     niveau_scolaire = models.CharField(max_length=50, blank=True)
