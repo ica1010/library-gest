@@ -54,122 +54,35 @@
                 <ul class="nav user-menu">
 
                     <li class="nav-item">
-                        <a href="../index.html" class="viewsite"><i class="fe fe-globe me-2"></i>View Site</a>
+                        <a href="/" class="viewsite"><i class="fe fe-globe me-2"></i>Voire le site</a>
                     </li>
                     
-                    <li class="nav-item dropdown has-arrow dropdown-heads ">
-                        <a href="javascript:void(0);" data-bs-toggle="dropdown">
-                            <i class="fe fe-bell"></i>
-                        </a>
-                        <div class="dropdown-menu notifications">
-                            <div class="topnav-dropdown-header">
-                                <span class="notification-title">Notifications</span>
-                                <a href="#" class="clear-noti"> Clear All </a>
-                            </div>
-                            <div class="noti-content">
-                                <ul class="notification-list">
-                                    <li class="notification-message">
-                                        <a >
-                                            <div class="media d-flex">
-                                                <span class="avatar avatar-sm flex-shrink-0">
-                                                    <img class="avatar-img rounded-circle" alt="" src="{% static 'admin/assets/img/provider/provider-01.jpg' %}" />
-                                                </span>
-                                                <div class="media-body flex-grow-1">
-                                                    <p class="noti-details">
-                                                        <span class="noti-title">Matthew Garcia have been
-                                                            subscribed</span>
-                                                    </p>
-                                                    <p class="noti-time">
-                                                        <span class="notification-time">15 Sep 2020 10:20 PM</span>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </a>
-                                        <button type="submit" class="btn btn-accept">Accept</button><button
-                                            type="submit" class="btn btn-decline">Decline</button>
-                                    </li>
-                                    <li class="notification-message">
-                                        <a href="">
-                                            <div class="media d-flex">
-                                                <span class="avatar avatar-sm flex-shrink-0">
-                                                    <img class="avatar-img rounded-circle" alt="" src="{% static 'admin/assets/img/provider/provider-02.jpg' %}" />
-                                                </span>
-                                                <div class="media-body flex-grow-1">
-                                                    <p class="noti-details">
-                                                        <span class="noti-title">New User Registered "James
-                                                            Hardin"</span>
-                                                    </p>
-                                                    <p class="noti-time">
-                                                        <span class="notification-time">15 Sep 2020 10:20 PM</span>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </a>
-                                        <button type="submit" class="btn btn-accept">Accept</button><span><button
-                                                type="submit" class="btn btn-decline">Decline</button></span>
-                                    </li>
-                                    <li class="notification-message">
-                                        <a href="">
-                                            <div class="media d-flex">
-                                                <span class="avatar avatar-sm flex-shrink-0">
-                                                    <img class="avatar-img rounded-circle" alt="" src="{% static 'admin/assets/img/provider/provider-03.jpg' %}" />
-                                                </span>
-                                                <div class="media-body flex-grow-1">
-                                                    <p class="noti-details">
-                                                        <span class="noti-title">New Service added "Plumbing"</span>
-                                                    </p>
-                                                    <p class="noti-time">
-                                                        <span class="notification-time">15 Sep 2020 10:20 PM</span>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </a>
-                                        <button type="submit" class="btn btn-decline-accept">Accept</button>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="topnav-dropdown-footer">
-                                <a href="">View all Notifications</a>
-                            </div>
-                        </div>
-                    </li>
-
                     <li class="nav-item dropdown">
                         <a href="#" class="user-link  nav-link" data-bs-toggle="dropdown">
                             <span class="user-img">
-                                <img class="rounded-circle" src="{% static 'admin/assets/img/user.jpg' %}" width="40" alt="Admin" />
+                                <i class=" rounded-circle fa fa-user"></i>
                                 <span class="animate-circle"></span>
                             </span>
                             <span class="user-content">
-                                <span class="user-name">John Smith</span>
-                                <span class="user-details">Demo User</span>
+                                <span class="user-name">{{request.user}}</span>
+                            
                             </span>
                         </a>
                         <div class="dropdown-menu menu-drop-user">
                             <div class="profilemenu ">
-                                <div class="user-detials">
-                                    <a href="https://listee.dreamstechnologies.com/html/admin/account.html">
-                                        <span class="profile-image">
-                                            <img src="{% static 'admin/assets/img/user.jpg' %}" alt="img" class="profilesidebar" />
-                                        </span>
-                                        <span class="profile-content">
-                                            <span>John Smith</span>
-                                            <span><span>adresse@email.com</span></span>
-                                        </span>
-                                    </a>
-                                </div>
+                            
                                 <div class="subscription-menu">
                                     <ul>
                                         <li>
                                             <a href="">Profile</a>
                                         </li>
                                         <li>
-                                            <a href="">Settings</a>
+                                            <a href="">Parametre</a>
                                         </li>
                                     </ul>
                                 </div>
                                 <div class="subscription-logout">
-                                    <a href="">Log Out</a>
+                                    <a href="{% url 'account_logout' %}">Se Déconnecter</a>
                                 </div>
                             </div>
                         </div>
@@ -230,6 +143,16 @@
         </div>
 
         <div class="page-wrapper">
+            {% if messages %}
+            <div class="container mt-3">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
           {% block content %}
           
           {% endblock content %}

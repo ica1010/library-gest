@@ -2,9 +2,22 @@
 {% load static %}
 
 {% block content %}
+
 <div class="container-fluid pt-4">
   <h2 class="mb-4">Tableau de bord administrateur</h2>
   <!-- Statistiques clés -->
+   <div class="row">
+      <!-- Actions rapides -->
+      <div class="row mb-4">
+        <div class="col-md-12 text-end">
+          <a href="{% url 'books:admin_add' %}" class="btn btn-primary">Ajouter un livre</a>
+          <a href="{% url 'books:admin_categories' %}" class="btn btn-secondary">Gérer les catégories</a>
+          <a href="{% url 'books:admin_loan_list' %}" class="btn btn-warning">Voir les emprunts</a>
+          <a href="{% url 'books:admin_sale_list' %}" class="btn btn-info">Voir les commandes</a>
+        </div>
+      </div>
+      </div>
+   </div>
   <div class="row mb-4">
     <div class="col-md-3">
       <div class="card text-center">
@@ -105,7 +118,7 @@
             <thead><tr><th>Utilisateur</th><th>Date</th><th>Total</th><th>Statut</th></tr></thead>
                                 <tbody>
               {% for sale in last_sales %}
-              <tr><td>{{ sale.user }}</td><td>{{ sale.date|date:'d/m/Y H:i' }}</td><td>{{ sale.total }} €</td><td>{{ sale.status }}</td></tr>
+              <tr><td>{{ sale.user }}</td><td>{{ sale.date|date:'d/m/Y H:i' }}</td><td>{{ sale.total }}</td><td>{{ sale.status }}</td></tr>
               {% empty %}<tr><td colspan="4">Aucune commande</td></tr>{% endfor %}
                                 </tbody>
                             </table>
@@ -136,16 +149,7 @@
                     </div>
                 </div>
             </div>
-  <!-- Actions rapides -->
-  <div class="row mb-4">
-    <div class="col-md-12 text-end">
-      <a href="{% url 'books:admin_add' %}" class="btn btn-primary">Ajouter un livre</a>
-      <a href="{% url 'books:admin_categories' %}" class="btn btn-secondary">Gérer les catégories</a>
-      <a href="{% url 'books:admin_loan_list' %}" class="btn btn-warning">Voir les emprunts</a>
-      <a href="{% url 'books:admin_sale_list' %}" class="btn btn-info">Voir les commandes</a>
-        </div>
-    </div>
-</div>
+
 {% endblock content %} 
 
 {% block extra_js %}
