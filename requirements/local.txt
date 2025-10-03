@@ -80,7 +80,7 @@ python-slugify==8.0.4
 PyYAML==6.0.3
 qrcode==8.2
 redis==6.4.0
-regex==2024.11.6
+regex==2025.9.18
 requests==2.32.5
 roman-numerals-py==3.1.0
 ruff==0.13.2
