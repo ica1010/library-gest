@@ -1,5 +1,5 @@
 alabaster==1.0.0
-anyio==4.12.0
+anyio==4.12.1
 argon2-cffi==25.1.0
 argon2-cffi-bindings==21.2.0
 asgiref==3.11.0
@@ -48,7 +48,7 @@ idna==3.11
 imagesize==1.4.1
 iniconfig==2.3.0
 ipdb==0.13.13
-ipython==9.8.0
+ipython==9.9.0
 ipython_pygments_lexers==1.1.1
 jedi==0.19.2
 Jinja2==3.1.6
